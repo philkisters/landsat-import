@@ -1,16 +1,21 @@
+import os
 from flask import Flask, request, flash, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
-import os
+
+from analyze_tiff import cutTIFF;
 
 app = Flask(__name__, static_url_path='', static_folder='static')
 
 UPLOAD_FOLDER = 'uploads'
+CUT_FOLDER = 'uploads/cut'
 ALLOWED_EXTENSIONS = {'tif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['CUT_FOLDER'] = CUT_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(CUT_FOLDER, exist_ok=True)
 
 CORS(app)
 
@@ -40,7 +45,12 @@ def upload_file():
     filename = secure_filename(file.filename)
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return jsonify({'message': 'File uploaded successfully'}), 200
-    
+
+@app.route('/analyze', methods=['POST'])
+def analyze_file():
+    filename = request.get_json()['filename']
+    cutTIFF(app.config['CUT_FOLDER'], filename)
+    return jsonify({'message': 'File analyzed successfully'}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

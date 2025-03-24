@@ -18,6 +18,8 @@
 import Button from './ui/ButtonComponent.vue'
 import { ref } from 'vue'
 
+
+const emit = defineEmits(['success'])
 const selectedFile = ref(null)
 
 const selectedFileChanged = (event) => {
@@ -47,7 +49,11 @@ const UploadFile = () => {
   })
     .then(response => response.json())
     .then(data => {
-      console.log('Success:', data);
+      if (!data.error) {
+        emit('success', selectedFile.value.name)
+        return;
+      }
+      console.log('Error:', data);
     })
     .catch(error => {
       console.error('Error:', error);
