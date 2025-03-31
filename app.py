@@ -3,7 +3,7 @@ from flask import Flask, request, flash, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 
-from analyze_tiff import cutTIFF;
+from analyze_tiff import cut_tiff, store_tiff;
 
 app = Flask(__name__, static_url_path='', static_folder='static')
 
@@ -49,8 +49,16 @@ def upload_file():
 @app.route('/analyze', methods=['POST'])
 def analyze_file():
     filename = request.get_json()['filename']
-    cutTIFF(app.config['CUT_FOLDER'], filename)
+    cut_tiff(app.config['CUT_FOLDER'], filename)
     return jsonify({'message': 'File analyzed successfully'}), 200
+
+
+@app.route('/store', methods=['POST'])
+def store_file():
+    filename = request.get_json()['filename']
+    print(f"Starting to store {filename}")
+    id = store_tiff(app.config['CUT_FOLDER'], filename)
+    return jsonify({'message': 'File stored successfully', 'id': id}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
