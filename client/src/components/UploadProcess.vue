@@ -44,7 +44,10 @@
       <template #icon>
         <IconCheck />
       </template>
-      <template #heading>Done</template>
+      <template #heading>
+        <p>Done</p>
+        <Button @click="reset">Add another Dataset</Button>
+      </template>
 
       {{ filename }} successfully analyzed and stored.
     </ProcessItem>
@@ -59,10 +62,16 @@ import IconCheck from './icons/IconCheck.vue'
 import UploadItem from './UploadItem.vue'
 import AnalyzingItem from './AnalyzingItem.vue'
 import StoreItem from './StoreItem.vue'
+import Button from './ui/ButtonComponent.vue'
 import { ref } from 'vue'
 
 const step = ref(0);
 const filename = ref('')
+
+const reset = () => {
+  step.value = 0;
+  filename.value = ''
+}
 
 const uploadedFile = (file) => {
   filename.value = file;
