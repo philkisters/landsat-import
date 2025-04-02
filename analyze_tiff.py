@@ -13,7 +13,7 @@ transformer_to_utm = Transformer.from_crs("epsg:4326", "epsg:32632", always_xy=T
 SRID = '32632'
 
 def cut_tiff(foldername, filename):
-  min_lon, min_lat, max_lon, max_lat = 9.7, 53, 10, 53.4
+  min_lon, min_lat, max_lon, max_lat = 9.66, 53.39, 10.37, 53.73
 
   min_x, min_y = transformer_to_utm.transform(min_lon, min_lat)
   max_x, max_y = transformer_to_utm.transform(max_lon, max_lat)
